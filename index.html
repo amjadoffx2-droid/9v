@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="UTF-8">
+  
+  
+  <meta name="viewport" content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no,
+        viewport-fit=cover">
+  
+  
+  <meta name="theme-color" content="#050608">
+  
+  
+  <title>
+    5v5 Tactical FPS
+  </title>
+  
+  
+  <link rel="stylesheet" href="./style.css">
+  
+  
+  <!-- =========================================
+         THREE.JS IMPORT MAP
+    ========================================== -->
+  
+  <script type="importmap">
+    {
+        "imports": {
+
+            "three":
+                "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+
+            "three/addons/":
+                "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+
+        }
+    }
+    </script>
+  
+</head>
+
+
+<body>
+  
+  
+  <!-- =========================================
+         GAME
+    ========================================== -->
+  
+  <main id="game"></main>
+  
+  
+  <!-- =========================================
+         START SCREEN
+    ========================================== -->
+  
+  <section id="startScreen">
+    
+    <div class="startBackground"></div>
+    
+    
+    <div class="startPanel">
+      
+      <div class="gameBrand">
+        
+        <div class="brandTop">
+          TACTICAL
+        </div>
+        
+        
+        <div class="brandMain">
+          5V5
+        </div>
+        
+        
+        <div class="brandBottom">
+          COMBAT ZONE
+        </div>
+        
+      </div>
+      
+      
+      <div class="startDivider"></div>
+      
+      
+      <div class="modeInfo">
+        
+        <div class="modeTitle">
+          TEAM DEATHMATCH
+        </div>
+        
+        
+        <div class="modeDescription">
+          5 PLAYERS VS 5 PLAYERS
+        </div>
+        
+      </div>
+      
+      
+      <button id="startButton" type="button">
+      
+        <span>
+          START MATCH
+        </span>
+        
+        <span class="buttonArrow">
+          ›
+        </span>
+        
+      </button>
+      
+      
+      <div class="controlHint">
+        
+        <div class="desktopHint">
+          
+          WASD &nbsp; MOVE
+          
+          <span>•</span>
+          
+          MOUSE &nbsp; LOOK
+          
+          <span>•</span>
+          
+          CLICK &nbsp; FIRE
+          
+        </div>
+        
+        
+        <div class="mobileHint">
+          
+          JOYSTICK &nbsp; MOVE
+          
+          <span>•</span>
+          
+          SWIPE &nbsp; LOOK
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+  </section>
+  
+  
+  <!-- =========================================
+         HUD
+    ========================================== -->
+  
+  <section id="hud">
+    
+    
+    <!-- =====================================
+             TOP BAR
+        ====================================== -->
+    
+    <div id="topBar">
+      
+      
+      <div class="matchMode">
+        
+        <div class="modeSmall">
+          TEAM DEATHMATCH
+        </div>
+        
+        
+        <div class="roundText">
+          ROUND 01
+        </div>
+        
+      </div>
+      
+      
+      <div id="teamScore">
+        
+        
+        <div class="scoreTeam redTeam">
+          
+          <span class="teamName">
+            RED
+          </span>
+          
+          
+          <strong id="redScore">
+            0
+          </strong>
+          
+        </div>
+        
+        
+        <div id="matchTimer" class="matchTimer">
+          10:00
+        </div>
+        
+        
+        <div class="scoreTeam blueTeam">
+          
+          <strong id="blueScore">
+            0
+          </strong>
+          
+          
+          <span class="teamName">
+            BLUE
+          </span>
+          
+        </div>
+        
+      </div>
+      
+      
+      <div class="connectionStatus">
+        
+        <span class="connectionDot"></span>
+        
+        
+        <span>
+          ONLINE
+        </span>
+        
+      </div>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             PLAYER TEAM
+        ====================================== -->
+    
+    <div id="playerTeam">
+      
+      <span class="teamIndicator"></span>
+      
+      
+      <span>
+        BLUE TEAM
+      </span>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             CROSSHAIR
+        ====================================== -->
+    
+    <div id="crosshair">
+      
+      <span class="crosshairTop"></span>
+      
+      
+      <span class="crosshairBottom"></span>
+      
+      
+      <span class="crosshairLeft"></span>
+      
+      
+      <span class="crosshairRight"></span>
+      
+      
+      <div class="crosshairCenter"></div>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             HIT MARKER
+        ====================================== -->
+    
+    <div id="hitMarker">
+      
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             KILL FEED
+        ====================================== -->
+    
+    <div id="killFeed">
+      
+      <div class="killEntry">
+        
+        <span class="killPlayer blueText">
+          PLAYER
+        </span>
+        
+        
+        <span class="killWeapon">
+          ▸
+        </span>
+        
+        
+        <span class="killPlayer redText">
+          ENEMY
+        </span>
+        
+      </div>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             OBJECTIVE
+        ====================================== -->
+    
+    <div id="objective">
+      
+      <div class="objectiveLabel">
+        OBJECTIVE
+      </div>
+      
+      
+      <div class="objectiveText">
+        ELIMINATE ENEMY TEAM
+      </div>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             HEALTH
+        ====================================== -->
+    
+    <div id="health">
+      
+      <div class="healthTop">
+        
+        <span class="healthLabel">
+          HEALTH
+        </span>
+        
+        
+        <span id="healthNumber">
+          100
+        </span>
+        
+      </div>
+      
+      
+      <div class="healthBar">
+        
+        <div id="healthFill" class="healthFill"></div>
+        
+      </div>
+      
+      
+      <div class="armorBar">
+        
+        <div id="armorFill" class="armorFill"></div>
+        
+      </div>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             AMMO
+        ====================================== -->
+    
+    <div id="ammo">
+      
+      <div class="weaponName">
+        ASSAULT RIFLE
+      </div>
+      
+      
+      <div class="ammoNumbers">
+        
+        <span id="ammoCurrent">
+          30
+        </span>
+        
+        
+        <span class="ammoSlash">
+          /
+        </span>
+        
+        
+        <span id="ammoReserve">
+          120
+        </span>
+        
+      </div>
+      
+      
+      <div class="ammoLabel">
+        AMMUNITION
+      </div>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             RELOAD STATUS
+        ====================================== -->
+    
+    <div id="reloadStatus">
+      RELOADING
+    </div>
+    
+    
+    <!-- =====================================
+             MOBILE CONTROLS
+        ====================================== -->
+    
+    <div id="mobileControls">
+      
+      
+      <!-- MOVEMENT -->
+      
+      <div id="joystick" class="joystick">
+        
+        <div class="joystickOuter"></div>
+        
+        
+        <div id="joystickKnob" class="joystickKnob"></div>
+        
+      </div>
+      
+      
+      <!-- FIRE -->
+      
+      <button id="fireButton" class="combatButton fireButton" type="button">
+      
+        <span class="fireIcon"></span>
+        
+        FIRE
+        
+      </button>
+      
+      
+      <!-- RELOAD -->
+      
+      <button id="reloadButton" class="combatButton reloadButton" type="button">
+        ↻
+      </button>
+      
+      
+      <!-- JUMP -->
+      
+      <button id="jumpButton" class="combatButton jumpButton" type="button">
+        JUMP
+      </button>
+      
+      
+      <!-- CROUCH -->
+      
+      <button id="crouchButton" class="combatButton crouchButton" type="button">
+        CROUCH
+      </button>
+      
+      
+      <!-- AIM -->
+      
+      <button id="aimButton" class="combatButton aimButton" type="button">
+        AIM
+      </button>
+      
+    </div>
+    
+    
+    <!-- =====================================
+             MOBILE WEAPON INFO
+        ====================================== -->
+    
+    <div id="mobileWeaponInfo">
+      
+      <span>
+        AR-01
+      </span>
+      
+    </div>
+    
+  </section>
+  
+  
+  <!-- =========================================
+         DEATH SCREEN
+    ========================================== -->
+  
+  <section id="deathScreen" class="hidden">
+    
+    <div class="deathPanel">
+      
+      <div class="deathTitle">
+        ELIMINATED
+      </div>
+      
+      
+      <div class="deathSub">
+        RESPawning...
+      </div>
+      
+    </div>
+    
+  </section>
+  
+  
+  <!-- =========================================
+         GAME MESSAGE
+    ========================================== -->
+  
+  <div id="gameMessage" class="hidden"></div>
+  
+  
+  <!-- =========================================
+         MAIN JAVASCRIPT
+    ========================================== -->
+  
+  <script type="module" src="./main.js"></script>
+  
+</body>
+
+</html>

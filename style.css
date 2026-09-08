@@ -1,0 +1,1628 @@
+/* =========================================================
+   5V5 TACTICAL FPS
+   MAIN UI / HUD STYLES
+========================================================= */
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  box-sizing: border-box;
+  
+  margin: 0;
+  padding: 0;
+  
+  user-select: none;
+  -webkit-user-select: none;
+  
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  
+  margin: 0;
+  
+  overflow: hidden;
+  
+  background: #050608;
+  
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+body {
+  touch-action: none;
+}
+
+
+/* =========================================================
+   GAME CANVAS
+========================================================= */
+
+#game {
+  position: fixed;
+  
+  inset: 0;
+  
+  width: 100%;
+  height: 100%;
+  
+  overflow: hidden;
+  
+  z-index: 0;
+}
+
+#game canvas {
+  display: block;
+  
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
+   HUD ROOT
+========================================================= */
+
+#hud {
+  position: fixed;
+  
+  inset: 0;
+  
+  width: 100%;
+  height: 100%;
+  
+  pointer-events: none;
+  
+  z-index: 20;
+  
+  color: white;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+#topBar {
+  position: absolute;
+  
+  top: 0;
+  left: 0;
+  
+  width: 100%;
+  
+  height: 76px;
+  
+  display: flex;
+  
+  align-items: center;
+  justify-content: space-between;
+  
+  padding:
+    0 28px;
+  
+  background:
+    linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.65),
+      rgba(0, 0, 0, 0));
+}
+
+
+/* =========================================================
+   MATCH MODE
+========================================================= */
+
+.matchMode {
+  min-width: 180px;
+  
+  text-align: left;
+}
+
+.modeSmall {
+  color: #ffffff;
+  
+  font-size: 12px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 1.8px;
+}
+
+.roundText {
+  margin-top: 5px;
+  
+  color: rgba(255, 255, 255, 0.5);
+  
+  font-size: 9px;
+  
+  letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   SCOREBOARD
+========================================================= */
+
+#teamScore {
+  position: absolute;
+  
+  left: 50%;
+  
+  top: 12px;
+  
+  transform:
+    translateX(-50%);
+  
+  display: flex;
+  
+  align-items: center;
+  
+  justify-content: center;
+  
+  min-width: 280px;
+  
+  height: 50px;
+  
+  background:
+    rgba(5, 7, 9, 0.72);
+  
+  border:
+    1px solid rgba(255, 255, 255, 0.12);
+  
+  clip-path:
+    polygon(8px 0,
+      calc(100% - 8px) 0,
+      100% 8px,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      8px 100%,
+      0 calc(100% - 8px),
+      0 8px);
+}
+
+.scoreTeam {
+  height: 100%;
+  
+  min-width: 92px;
+  
+  display: flex;
+  
+  align-items: center;
+  
+  justify-content: center;
+  
+  gap: 10px;
+}
+
+.scoreTeam strong {
+  font-size: 23px;
+  
+  line-height: 1;
+}
+
+.teamName {
+  font-size: 10px;
+  
+  font-weight: 800;
+  
+  letter-spacing: 2px;
+}
+
+.redTeam {
+  color: #ff4c4c;
+}
+
+.blueTeam {
+  color: #4da6ff;
+}
+
+.matchTimer {
+  min-width: 70px;
+  
+  text-align: center;
+  
+  color: #ffffff;
+  
+  font-size: 16px;
+  
+  font-weight: 800;
+  
+  letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   CONNECTION
+========================================================= */
+
+.connectionStatus {
+  min-width: 100px;
+  
+  display: flex;
+  
+  align-items: center;
+  
+  justify-content: flex-end;
+  
+  gap: 7px;
+  
+  color:
+    rgba(255, 255, 255, 0.55);
+  
+  font-size: 9px;
+  
+  letter-spacing: 1.5px;
+}
+
+.connectionDot {
+  width: 6px;
+  height: 6px;
+  
+  border-radius: 50%;
+  
+  background: #48e28b;
+  
+  box-shadow:
+    0 0 8px rgba(72, 226, 139, 0.8);
+}
+
+
+/* =========================================================
+   PLAYER TEAM
+========================================================= */
+
+#playerTeam {
+  position: absolute;
+  
+  left: 28px;
+  top: 94px;
+  
+  display: flex;
+  
+  align-items: center;
+  
+  gap: 7px;
+  
+  color:
+    rgba(255, 255, 255, 0.75);
+  
+  font-size: 9px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 1.5px;
+}
+
+.teamIndicator {
+  width: 7px;
+  height: 7px;
+  
+  background: #4da6ff;
+  
+  box-shadow:
+    0 0 8px rgba(77, 166, 255, 0.7);
+}
+
+
+/* =========================================================
+   CROSSHAIR
+========================================================= */
+
+#crosshair {
+  position: fixed;
+  
+  left: 50%;
+  top: 50%;
+  
+  width: 30px;
+  height: 30px;
+  
+  transform:
+    translate(-50%, -50%);
+  
+  pointer-events: none;
+  
+  z-index: 30;
+}
+
+#crosshair span {
+  position: absolute;
+  
+  display: block;
+  
+  background: rgba(255, 255, 255, 0.95);
+  
+  box-shadow:
+    0 0 2px #000;
+}
+
+.crosshairTop {
+  width: 2px;
+  height: 8px;
+  
+  left: 14px;
+  top: 0;
+}
+
+.crosshairBottom {
+  width: 2px;
+  height: 8px;
+  
+  left: 14px;
+  bottom: 0;
+}
+
+.crosshairLeft {
+  width: 8px;
+  height: 2px;
+  
+  left: 0;
+  top: 14px;
+}
+
+.crosshairRight {
+  width: 8px;
+  height: 2px;
+  
+  right: 0;
+  top: 14px;
+}
+
+.crosshairCenter {
+  position: absolute;
+  
+  width: 2px;
+  height: 2px;
+  
+  left: 14px;
+  top: 14px;
+  
+  background: white;
+  
+  border-radius: 50%;
+}
+
+
+/* =========================================================
+   HIT MARKER
+========================================================= */
+
+#hitMarker {
+  position: fixed;
+  
+  left: 50%;
+  top: 50%;
+  
+  width: 32px;
+  height: 32px;
+  
+  transform:
+    translate(-50%, -50%);
+  
+  pointer-events: none;
+  
+  opacity: 0;
+  
+  z-index: 31;
+}
+
+#hitMarker.hit {
+  animation:
+    hitMarkerAnimation 0.14s ease-out;
+}
+
+#hitMarker span {
+  position: absolute;
+  
+  width: 10px;
+  height: 2px;
+  
+  background: #ffffff;
+  
+  box-shadow:
+    0 0 3px #000;
+}
+
+#hitMarker span:nth-child(1) {
+  left: 1px;
+  top: 5px;
+  
+  transform: rotate(45deg);
+}
+
+#hitMarker span:nth-child(2) {
+  right: 1px;
+  top: 5px;
+  
+  transform: rotate(-45deg);
+}
+
+#hitMarker span:nth-child(3) {
+  left: 1px;
+  bottom: 5px;
+  
+  transform: rotate(-45deg);
+}
+
+#hitMarker span:nth-child(4) {
+  right: 1px;
+  bottom: 5px;
+  
+  transform: rotate(45deg);
+}
+
+@keyframes hitMarkerAnimation {
+  
+  0% {
+    opacity: 1;
+    
+    transform:
+      translate(-50%, -50%) scale(0.65);
+  }
+  
+  100% {
+    opacity: 0;
+    
+    transform:
+      translate(-50%, -50%) scale(1.2);
+  }
+  
+}
+
+
+/* =========================================================
+   KILL FEED
+========================================================= */
+
+#killFeed {
+  position: absolute;
+  
+  top: 92px;
+  right: 24px;
+  
+  width: 260px;
+  
+  display: flex;
+  
+  flex-direction: column;
+  
+  gap: 5px;
+  
+  text-align: right;
+}
+
+.killEntry {
+  display: flex;
+  
+  justify-content: flex-end;
+  
+  align-items: center;
+  
+  gap: 8px;
+  
+  padding:
+    6px 9px;
+  
+  background:
+    rgba(0, 0, 0, 0.45);
+  
+  border-right:
+    2px solid rgba(255, 255, 255, 0.4);
+  
+  font-size: 10px;
+}
+
+.killPlayer {
+  font-weight: 800;
+  
+  letter-spacing: 0.7px;
+}
+
+.blueText {
+  color: #62adff;
+}
+
+.redText {
+  color: #ff5b5b;
+}
+
+.killWeapon {
+  color:
+    rgba(255, 255, 255, 0.45);
+}
+
+
+/* =========================================================
+   OBJECTIVE
+========================================================= */
+
+#objective {
+  position: absolute;
+  
+  left: 50%;
+  
+  top: 94px;
+  
+  transform:
+    translateX(-50%);
+  
+  text-align: center;
+  
+  opacity: 0.8;
+}
+
+.objectiveLabel {
+  color:
+    rgba(255, 255, 255, 0.45);
+  
+  font-size: 8px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 2px;
+}
+
+.objectiveText {
+  margin-top: 4px;
+  
+  color: white;
+  
+  font-size: 10px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 1.2px;
+}
+
+
+/* =========================================================
+   HEALTH
+========================================================= */
+
+#health {
+  position: absolute;
+  
+  left: 28px;
+  bottom: 27px;
+  
+  width: 210px;
+}
+
+.healthTop {
+  display: flex;
+  
+  align-items: center;
+  
+  justify-content: space-between;
+  
+  margin-bottom: 6px;
+}
+
+.healthLabel {
+  color:
+    rgba(255, 255, 255, 0.55);
+  
+  font-size: 9px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 1.7px;
+}
+
+#healthNumber {
+  color: #ffffff;
+  
+  font-size: 18px;
+  
+  font-weight: 800;
+}
+
+.healthBar {
+  width: 100%;
+  height: 8px;
+  
+  background:
+    rgba(0, 0, 0, 0.65);
+  
+  border:
+    1px solid rgba(255, 255, 255, 0.15);
+  
+  overflow: hidden;
+}
+
+.healthFill {
+  width: 100%;
+  height: 100%;
+  
+  background: #45dc76;
+  
+  transition:
+    width 0.15s ease;
+}
+
+.armorBar {
+  width: 100%;
+  height: 3px;
+  
+  margin-top: 4px;
+  
+  background:
+    rgba(0, 0, 0, 0.65);
+}
+
+.armorFill {
+  width: 70%;
+  height: 100%;
+  
+  background: #69a9df;
+}
+
+
+/* =========================================================
+   AMMO
+========================================================= */
+
+#ammo {
+  position: absolute;
+  
+  right: 28px;
+  bottom: 24px;
+  
+  min-width: 170px;
+  
+  text-align: right;
+}
+
+.weaponName {
+  margin-bottom: 2px;
+  
+  color:
+    rgba(255, 255, 255, 0.55);
+  
+  font-size: 9px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 2px;
+}
+
+.ammoNumbers {
+  color: #ffffff;
+  
+  font-size: 38px;
+  
+  font-weight: 800;
+  
+  line-height: 1;
+}
+
+.ammoSlash {
+  color:
+    rgba(255, 255, 255, 0.35);
+  
+  margin:
+    0 4px;
+}
+
+#ammoReserve {
+  color:
+    rgba(255, 255, 255, 0.55);
+  
+  font-size: 21px;
+}
+
+.ammoLabel {
+  margin-top: 5px;
+  
+  color:
+    rgba(255, 255, 255, 0.35);
+  
+  font-size: 8px;
+  
+  letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   RELOAD STATUS
+========================================================= */
+
+#reloadStatus {
+  position: fixed;
+  
+  left: 50%;
+  bottom: 118px;
+  
+  transform:
+    translateX(-50%);
+  
+  padding:
+    7px 14px;
+  
+  background:
+    rgba(0, 0, 0, 0.6);
+  
+  color: white;
+  
+  font-size: 10px;
+  
+  font-weight: 800;
+  
+  letter-spacing: 2px;
+  
+  opacity: 0;
+  
+  pointer-events: none;
+}
+
+#reloadStatus.active {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   MOBILE CONTROLS
+========================================================= */
+
+#mobileControls {
+  position: fixed;
+  
+  inset: 0;
+  
+  pointer-events: none;
+  
+  z-index: 50;
+}
+
+
+/* =========================================================
+   JOYSTICK
+========================================================= */
+
+.joystick {
+  position: absolute;
+  
+  left: 25px;
+  bottom: 72px;
+  
+  width: 132px;
+  height: 132px;
+  
+  border-radius: 50%;
+  
+  pointer-events: auto;
+}
+
+.joystickOuter {
+  position: absolute;
+  
+  inset: 0;
+  
+  border-radius: 50%;
+  
+  border:
+    2px solid rgba(255, 255, 255, 0.18);
+  
+  background:
+    rgba(255, 255, 255, 0.045);
+  
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.joystickKnob {
+  position: absolute;
+  
+  left: 50%;
+  top: 50%;
+  
+  width: 58px;
+  height: 58px;
+  
+  transform:
+    translate(-50%, -50%);
+  
+  border-radius: 50%;
+  
+  background:
+    rgba(255, 255, 255, 0.17);
+  
+  border:
+    1px solid rgba(255, 255, 255, 0.25);
+  
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================================
+   COMBAT BUTTONS
+========================================================= */
+
+.combatButton {
+  position: absolute;
+  
+  display: flex;
+  
+  align-items: center;
+  justify-content: center;
+  
+  border-radius: 50%;
+  
+  color: white;
+  
+  font-weight: 800;
+  
+  border:
+    1px solid rgba(255, 255, 255, 0.25);
+  
+  background:
+    rgba(0, 0, 0, 0.32);
+  
+  backdrop-filter:
+    blur(5px);
+  
+  -webkit-backdrop-filter:
+    blur(5px);
+  
+  pointer-events: auto;
+  
+  touch-action: none;
+}
+
+.combatButton:active {
+  transform: scale(0.94);
+}
+
+
+/* FIRE */
+
+.fireButton {
+  right: 24px;
+  bottom: 68px;
+  
+  width: 96px;
+  height: 96px;
+  
+  flex-direction: column;
+  
+  gap: 4px;
+  
+  background:
+    rgba(170, 30, 30, 0.32);
+  
+  border-color:
+    rgba(255, 90, 90, 0.5);
+  
+  font-size: 11px;
+  
+  letter-spacing: 1px;
+}
+
+.fireIcon {
+  width: 18px;
+  height: 18px;
+  
+  border:
+    2px solid rgba(255, 255, 255, 0.8);
+  
+  border-radius: 50%;
+  
+  position: relative;
+}
+
+.fireIcon::after {
+  content: "";
+  
+  position: absolute;
+  
+  width: 6px;
+  height: 6px;
+  
+  left: 4px;
+  top: 4px;
+  
+  border-radius: 50%;
+  
+  background: white;
+}
+
+
+/* RELOAD */
+
+.reloadButton {
+  right: 132px;
+  bottom: 68px;
+  
+  width: 58px;
+  height: 58px;
+  
+  font-size: 27px;
+}
+
+
+/* JUMP */
+
+.jumpButton {
+  right: 30px;
+  bottom: 180px;
+  
+  width: 60px;
+  height: 60px;
+  
+  font-size: 9px;
+  
+  letter-spacing: 1px;
+}
+
+
+/* CROUCH */
+
+.crouchButton {
+  right: 102px;
+  bottom: 184px;
+  
+  width: 48px;
+  height: 48px;
+  
+  font-size: 7px;
+  
+  letter-spacing: 1px;
+}
+
+
+/* AIM */
+
+.aimButton {
+  right: 180px;
+  bottom: 180px;
+  
+  width: 58px;
+  height: 58px;
+  
+  font-size: 9px;
+  
+  letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   MOBILE WEAPON
+========================================================= */
+
+#mobileWeaponInfo {
+  display: none;
+  
+  position: absolute;
+  
+  right: 24px;
+  bottom: 190px;
+  
+  color:
+    rgba(255, 255, 255, 0.45);
+  
+  font-size: 9px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   START SCREEN
+========================================================= */
+
+#startScreen {
+  position: fixed;
+  
+  inset: 0;
+  
+  display: flex;
+  
+  align-items: center;
+  justify-content: center;
+  
+  z-index: 100;
+  
+  overflow: hidden;
+  
+  background:
+    #050608;
+}
+
+.startBackground {
+  position: absolute;
+  
+  inset: 0;
+  
+  background:
+    radial-gradient(circle at center,
+      rgba(50, 65, 80, 0.28),
+      transparent 45%),
+    linear-gradient(135deg,
+      rgba(255, 255, 255, 0.025) 25%,
+      transparent 25%);
+  
+  opacity: 0.8;
+}
+
+.startBackground::after {
+  content: "";
+  
+  position: absolute;
+  
+  inset: 0;
+  
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px),
+    linear-gradient(90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px);
+  
+  background-size:
+    50px 50px;
+  
+  mask-image:
+    linear-gradient(to bottom,
+      transparent,
+      black);
+}
+
+
+/* =========================================================
+   START PANEL
+========================================================= */
+
+.startPanel {
+  position: relative;
+  
+  width:
+    min(90vw, 440px);
+  
+  padding:
+    48px 38px 34px;
+  
+  background:
+    rgba(5, 7, 9, 0.88);
+  
+  border:
+    1px solid rgba(255, 255, 255, 0.13);
+  
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.65);
+  
+  text-align: center;
+  
+  clip-path:
+    polygon(14px 0,
+      calc(100% - 14px) 0,
+      100% 14px,
+      100% calc(100% - 14px),
+      calc(100% - 14px) 100%,
+      14px 100%,
+      0 calc(100% - 14px),
+      0 14px);
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.gameBrand {
+  color: white;
+}
+
+.brandTop {
+  font-size: 12px;
+  
+  font-weight: 800;
+  
+  letter-spacing: 7px;
+  
+  color:
+    rgba(255, 255, 255, 0.45);
+}
+
+.brandMain {
+  margin-top: 3px;
+  
+  font-size: 76px;
+  
+  font-weight: 900;
+  
+  line-height: 0.9;
+  
+  letter-spacing: 5px;
+}
+
+.brandBottom {
+  margin-top: 12px;
+  
+  font-size: 11px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 5px;
+  
+  color:
+    rgba(255, 255, 255, 0.65);
+}
+
+
+/* =========================================================
+   START DIVIDER
+========================================================= */
+
+.startDivider {
+  width: 80px;
+  height: 1px;
+  
+  margin:
+    25px auto;
+  
+  background:
+    rgba(255, 255, 255, 0.25);
+}
+
+
+/* =========================================================
+   MODE
+========================================================= */
+
+.modeTitle {
+  color: white;
+  
+  font-size: 12px;
+  
+  font-weight: 800;
+  
+  letter-spacing: 2px;
+}
+
+.modeDescription {
+  margin-top: 7px;
+  
+  color:
+    rgba(255, 255, 255, 0.4);
+  
+  font-size: 9px;
+  
+  letter-spacing: 1.5px;
+}
+
+
+/* =========================================================
+   START BUTTON
+========================================================= */
+
+#startButton {
+  position: relative;
+  
+  width: 100%;
+  
+  height: 52px;
+  
+  margin-top: 28px;
+  
+  border: 0;
+  
+  background: #ffffff;
+  
+  color: #050608;
+  
+  font-size: 12px;
+  
+  font-weight: 900;
+  
+  letter-spacing: 2px;
+  
+  cursor: pointer;
+  
+  transition:
+    transform 0.1s ease,
+    background 0.15s ease;
+}
+
+#startButton:hover {
+  background: #e8edf1;
+}
+
+#startButton:active {
+  transform: scale(0.98);
+}
+
+.buttonArrow {
+  position: absolute;
+  
+  right: 18px;
+  
+  font-size: 22px;
+  
+  line-height: 1;
+  
+  top: 14px;
+}
+
+
+/* =========================================================
+   CONTROL HINT
+========================================================= */
+
+.controlHint {
+  margin-top: 20px;
+  
+  color:
+    rgba(255, 255, 255, 0.28);
+  
+  font-size: 8px;
+  
+  font-weight: 700;
+  
+  letter-spacing: 1.2px;
+}
+
+.controlHint span {
+  margin:
+    0 5px;
+  
+  color:
+    rgba(255, 255, 255, 0.15);
+}
+
+.mobileHint {
+  display: none;
+}
+
+
+/* =========================================================
+   DEATH SCREEN
+========================================================= */
+
+#deathScreen {
+  position: fixed;
+  
+  inset: 0;
+  
+  z-index: 80;
+  
+  display: flex;
+  
+  align-items: center;
+  justify-content: center;
+  
+  background:
+    rgba(80, 0, 0, 0.35);
+  
+  pointer-events: none;
+}
+
+.deathPanel {
+  text-align: center;
+  
+  padding: 30px 60px;
+  
+  background:
+    rgba(0, 0, 0, 0.65);
+  
+  border:
+    1px solid rgba(255, 80, 80, 0.25);
+}
+
+.deathTitle {
+  color: #ff5b5b;
+  
+  font-size: 32px;
+  
+  font-weight: 900;
+  
+  letter-spacing: 5px;
+}
+
+.deathSub {
+  margin-top: 8px;
+  
+  color:
+    rgba(255, 255, 255, 0.5);
+  
+  font-size: 9px;
+  
+  letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   UTILITY
+========================================================= */
+
+.hidden {
+  display: none !important;
+}
+
+#gameMessage {
+  position: fixed;
+  
+  left: 50%;
+  top: 35%;
+  
+  transform:
+    translate(-50%, -50%);
+  
+  z-index: 70;
+  
+  padding:
+    12px 20px;
+  
+  background:
+    rgba(0, 0, 0, 0.75);
+  
+  color: white;
+  
+  font-size: 12px;
+  
+  font-weight: 800;
+  
+  letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 899px) {
+  
+  #topBar {
+    height: 62px;
+    
+    padding:
+      0 15px;
+  }
+  
+  .matchMode {
+    display: none;
+  }
+  
+  #teamScore {
+    top: 8px;
+    
+    min-width: 220px;
+    
+    height: 45px;
+  }
+  
+  .scoreTeam {
+    min-width: 68px;
+    
+    gap: 7px;
+  }
+  
+  .scoreTeam strong {
+    font-size: 19px;
+  }
+  
+  .teamName {
+    font-size: 8px;
+  }
+  
+  .matchTimer {
+    min-width: 55px;
+    
+    font-size: 13px;
+  }
+  
+  .connectionStatus {
+    display: none;
+  }
+  
+  #playerTeam {
+    left: 15px;
+    top: 76px;
+    
+    font-size: 8px;
+  }
+  
+  #killFeed {
+    top: 76px;
+    right: 12px;
+    
+    width: 190px;
+  }
+  
+  .killEntry {
+    font-size: 8px;
+  }
+  
+  #objective {
+    top: 76px;
+  }
+  
+  #health {
+    left: 18px;
+    bottom: 22px;
+    
+    width: 145px;
+  }
+  
+  #ammo {
+    right: 18px;
+    bottom: 20px;
+    
+    min-width: 130px;
+  }
+  
+  .ammoNumbers {
+    font-size: 30px;
+  }
+  
+  #ammoReserve {
+    font-size: 17px;
+  }
+  
+  .weaponName {
+    font-size: 8px;
+  }
+  
+  .ammoLabel {
+    font-size: 7px;
+  }
+  
+  #mobileControls {
+    display: block;
+  }
+  
+  #mobileWeaponInfo {
+    display: block;
+  }
+  
+  .desktopHint {
+    display: none;
+  }
+  
+  .mobileHint {
+    display: block;
+  }
+  
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 430px) {
+  
+  .startPanel {
+    padding:
+      38px 24px 28px;
+  }
+  
+  .brandMain {
+    font-size: 64px;
+  }
+  
+  .brandTop {
+    font-size: 10px;
+    
+    letter-spacing: 5px;
+  }
+  
+  .brandBottom {
+    font-size: 9px;
+    
+    letter-spacing: 3px;
+  }
+  
+  #teamScore {
+    min-width: 205px;
+  }
+  
+  .joystick {
+    left: 18px;
+    bottom: 62px;
+    
+    width: 116px;
+    height: 116px;
+  }
+  
+  .fireButton {
+    right: 18px;
+    bottom: 58px;
+    
+    width: 86px;
+    height: 86px;
+  }
+  
+  .reloadButton {
+    right: 116px;
+    bottom: 58px;
+  }
+  
+  .jumpButton {
+    right: 20px;
+    bottom: 158px;
+  }
+  
+  .crouchButton {
+    right: 82px;
+    bottom: 163px;
+  }
+  
+  .aimButton {
+    right: 145px;
+    bottom: 164px;
+  }
+  
+}
+
+
+/* =========================================================
+   LANDSCAPE PHONE
+========================================================= */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  
+  .joystick {
+    bottom: 30px;
+  }
+  
+  .fireButton {
+    bottom: 28px;
+  }
+  
+  .reloadButton {
+    bottom: 28px;
+  }
+  
+  .jumpButton {
+    bottom: 115px;
+  }
+  
+  .crouchButton {
+    bottom: 120px;
+  }
+  
+  .aimButton {
+    bottom: 120px;
+  }
+  
+  #health {
+    bottom: 20px;
+  }
+  
+  #ammo {
+    bottom: 17px;
+  }
+  
+  #objective {
+    display: none;
+  }
+  
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 900px) {
+  
+  #mobileControls {
+    display: none;
+  }
+  
+  #mobileWeaponInfo {
+    display: none;
+  }
+  
+}
