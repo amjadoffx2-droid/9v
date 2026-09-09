@@ -10,60 +10,21 @@ const SERVER_URL =
 
 
 /* =========================================================
-   SPAWNS — OLD MAP
+   OLD MAP SPAWNS
 ========================================================= */
 
 const BLUE_SPAWNS = [
-  new THREE.Vector3(
-    -15,
-    1.7,
-    43
-  ),
-
-  new THREE.Vector3(
-    -5,
-    1.7,
-    43
-  ),
-
-  new THREE.Vector3(
-    5,
-    1.7,
-    43
-  ),
-
-  new THREE.Vector3(
-    15,
-    1.7,
-    43
-  )
+  new THREE.Vector3(-15, 1.7, 43),
+  new THREE.Vector3(-5, 1.7, 43),
+  new THREE.Vector3(5, 1.7, 43),
+  new THREE.Vector3(15, 1.7, 43)
 ];
 
-
 const RED_SPAWNS = [
-  new THREE.Vector3(
-    -15,
-    1.7,
-    -43
-  ),
-
-  new THREE.Vector3(
-    -5,
-    1.7,
-    -43
-  ),
-
-  new THREE.Vector3(
-    5,
-    1.7,
-    -43
-  ),
-
-  new THREE.Vector3(
-    15,
-    1.7,
-    -43
-  )
+  new THREE.Vector3(-15, 1.7, -43),
+  new THREE.Vector3(-5, 1.7, -43),
+  new THREE.Vector3(5, 1.7, -43),
+  new THREE.Vector3(15, 1.7, -43)
 ];
 
 
@@ -75,20 +36,15 @@ function number(
   value,
   fallback = 0
 ) {
-
-  const n =
-    Number(value);
-
+  const n = Number(value);
 
   return Number.isFinite(n)
     ? n
     : fallback;
-
 }
 
 
 function createId() {
-
   return (
     Math.random()
       .toString(36)
@@ -96,7 +52,6 @@ function createId() {
     Date.now()
       .toString(36)
   );
-
 }
 
 
@@ -128,11 +83,10 @@ class RemotePlayer {
       String(
         data.name ||
         "PLAYER"
-      )
-        .slice(
-          0,
-          16
-        );
+      ).slice(
+        0,
+        16
+      );
 
 
     this.team =
@@ -156,20 +110,27 @@ class RemotePlayer {
       this.health > 0;
 
 
+    const position =
+      data.position || {};
+
+
     this.position =
       new THREE.Vector3(
         number(
-          data.x,
+          data.x ??
+          position.x,
           0
         ),
 
         number(
-          data.y,
+          data.y ??
+          position.y,
           1.7
         ),
 
         number(
-          data.z,
+          data.z ??
+          position.z,
           0
         )
       );
@@ -179,9 +140,15 @@ class RemotePlayer {
       this.position.clone();
 
 
+    const rotation =
+      data.rotation || {};
+
+
     this.yaw =
       number(
-        data.yaw,
+        data.yaw ??
+        data.rotationY ??
+        rotation.y,
 
         this.team === "red"
           ? Math.PI
@@ -282,11 +249,10 @@ class RemotePlayer {
       this.name =
         String(
           data.name
-        )
-          .slice(
-            0,
-            16
-          );
+        ).slice(
+          0,
+          16
+        );
 
     }
 
@@ -302,37 +268,87 @@ class RemotePlayer {
     }
 
 
-    this.targetPosition.set(
-
-      number(
-        data.x,
-        this.targetPosition.x
-      ),
-
-      number(
-        data.y,
-        this.targetPosition.y
-      ),
-
-      number(
-        data.z,
-        this.targetPosition.z
-      )
-
-    );
+    const position =
+      data.position || {};
 
 
-    this.targetYaw =
-      number(
-        data.yaw,
-        this.targetYaw
+    const x =
+      data.x ??
+      position.x;
+
+
+    const y =
+      data.y ??
+      position.y;
+
+
+    const z =
+      data.z ??
+      position.z;
+
+
+    if (
+      x !== undefined ||
+      y !== undefined ||
+      z !== undefined
+    ) {
+
+      this.targetPosition.set(
+
+        number(
+          x,
+          this.targetPosition.x
+        ),
+
+        number(
+          y,
+          this.targetPosition.y
+        ),
+
+        number(
+          z,
+          this.targetPosition.z
+        )
+
       );
 
+    }
 
-    this.moving =
-      Boolean(
-        data.moving
-      );
+
+    const rotation =
+      data.rotation || {};
+
+
+    const yaw =
+      data.yaw ??
+      data.rotationY ??
+      rotation.y;
+
+
+    if (
+      yaw !== undefined
+    ) {
+
+      this.targetYaw =
+        number(
+          yaw,
+          this.targetYaw
+        );
+
+    }
+
+
+    if (
+      data.moving !==
+      undefined
+    ) {
+
+      this.moving =
+        Boolean(
+          data.moving
+        );
+
+    }
 
 
     if (
@@ -365,8 +381,7 @@ class RemotePlayer {
     } else {
 
       this.alive =
-        this.health >
-        0;
+        this.health > 0;
 
     }
 
@@ -396,6 +411,53 @@ class RemotePlayer {
         );
 
     }
+
+  }
+
+
+  /* =======================================================
+     DAMAGE
+  ======================================================= */
+
+  takeDamage(
+    amount
+  ) {
+
+    if (
+      !this.alive
+    ) {
+
+      return;
+
+    }
+
+
+    const damage =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          number(
+            amount,
+            0
+          )
+        )
+      );
+
+
+    if (
+      !damage
+    ) {
+
+      return;
+
+    }
+
+
+    this.multiplayer.damage(
+      this.id,
+      damage
+    );
 
   }
 
@@ -508,62 +570,6 @@ class RemotePlayer {
 
 
   /* =======================================================
-     DAMAGE
-  ======================================================= */
-
-  takeDamage(
-    amount
-  ) {
-
-    if (
-      !this.alive
-    ) {
-
-      return;
-
-    }
-
-
-    const damage =
-      Math.max(
-        0,
-        Math.min(
-          100,
-          number(
-            amount,
-            0
-          )
-        )
-      );
-
-
-    if (
-      !damage
-    ) {
-
-      return;
-
-    }
-
-
-    this.multiplayer.send({
-      type:
-        "damage",
-
-      targetId:
-        this.id,
-
-      amount:
-        damage,
-
-      attackerId:
-        this.multiplayer.playerId
-    });
-
-  }
-
-
-  /* =======================================================
      DESTROY
   ======================================================= */
 
@@ -618,14 +624,11 @@ export class Multiplayer {
     this.connected =
       false;
 
-
     this.online =
       false;
 
-
     this.connecting =
       false;
-
 
     this.connectPromise =
       null;
@@ -634,18 +637,14 @@ export class Multiplayer {
     this.playerId =
       null;
 
-
     this.playerName =
       "PLAYER";
-
 
     this.roomCode =
       null;
 
-
     this.mode =
       "1v1";
-
 
     this.team =
       "blue";
@@ -666,10 +665,8 @@ export class Multiplayer {
     this.roomResponseTimer =
       null;
 
-
     this.roomResponseResolve =
       null;
-
 
     this.roomResponseReject =
       null;
@@ -678,20 +675,12 @@ export class Multiplayer {
     this.onRoomChanged =
       null;
 
-
     this.onStatus =
       null;
-
 
     this.onError =
       null;
 
-
-    /*
-     * Which spawn point to use next.
-     * This prevents repeatedly using
-     * exactly the same position.
-     */
 
     this.spawnIndex =
       0;
@@ -1021,7 +1010,6 @@ export class Multiplayer {
     this.roomResponseResolve =
       null;
 
-
     this.roomResponseReject =
       null;
 
@@ -1242,14 +1230,11 @@ export class Multiplayer {
               this.connected =
                 false;
 
-
               this.online =
                 false;
 
-
               this.connecting =
                 false;
-
 
               this.connectPromise =
                 null;
@@ -1350,7 +1335,6 @@ export class Multiplayer {
         "[MULTIPLAYER] BAD SERVER MESSAGE",
         error
       );
-
 
       return;
 
@@ -1601,8 +1585,8 @@ export class Multiplayer {
     ===================================================== */
 
     if (
-      type === "damage" ||
-      type === "player_damaged"
+      type === "player_damaged" ||
+      type === "damage"
     ) {
 
       this.handleDamage(
@@ -1616,10 +1600,53 @@ export class Multiplayer {
 
 
     /* =====================================================
+       KILLED
+    ===================================================== */
+
+    if (
+      type === "player_killed"
+    ) {
+
+      const playerId =
+        message.playerId ||
+        message.targetId ||
+        message.id;
+
+
+      const remote =
+        this.remotePlayers.get(
+          playerId
+        );
+
+
+      if (
+        remote
+      ) {
+
+        remote.health =
+          0;
+
+        remote.alive =
+          false;
+
+        remote.setVisible(
+          false
+        );
+
+      }
+
+
+      return;
+
+    }
+
+
+    /* =====================================================
        SHOOT
     ===================================================== */
 
     if (
+      type === "player_shoot" ||
       type === "shoot"
     ) {
 
@@ -1653,8 +1680,9 @@ export class Multiplayer {
     ===================================================== */
 
     if (
-      type === "respawn" ||
-      type === "player_respawn"
+      type === "player_respawned" ||
+      type === "player_respawn" ||
+      type === "respawn"
     ) {
 
       this.handleRespawn(
@@ -1740,13 +1768,9 @@ export class Multiplayer {
       true;
 
 
-    /*
-     * IMPORTANT:
-     * Always use our local safe spawn
-     * when entering the match.
-     */
-
-    this.applyLocalSpawn();
+    this.applyLocalSpawn(
+      message
+    );
 
 
     this.status(
@@ -1786,13 +1810,15 @@ export class Multiplayer {
 
     if (
       message.roomCode ||
-      message.code
+      message.code ||
+      message.room
     ) {
 
       this.roomCode =
         String(
           message.roomCode ||
-          message.code
+          message.code ||
+          message.room
         )
           .toUpperCase();
 
@@ -1866,35 +1892,36 @@ export class Multiplayer {
     }
 
 
-    const ids =
-      new Set(
-        players
-          .map(
-            (p) =>
-              p.id ||
-              p.playerId
-          )
-          .filter(
-            Boolean
-          )
-      );
-
-
-    for (
-      const playerId of
-        this.remotePlayers.keys()
+    if (
+      players.length
     ) {
 
-      if (
-        players.length &&
-        !ids.has(
-          playerId
-        )
+      const ids =
+        new Set(
+          players.map(
+            (player) =>
+              player.id ||
+              player.playerId
+          )
+        );
+
+
+      for (
+        const playerId of
+        this.remotePlayers.keys()
       ) {
 
-        this.removeRemote(
-          playerId
-        );
+        if (
+          !ids.has(
+            playerId
+          )
+        ) {
+
+          this.removeRemote(
+            playerId
+          );
+
+        }
 
       }
 
@@ -1907,21 +1934,12 @@ export class Multiplayer {
 
 
   /* =======================================================
-     ADD / UPDATE REMOTE
+     UPSERT REMOTE
   ======================================================= */
 
   upsertRemote(
     data
   ) {
-
-    if (
-      !data
-    ) {
-
-      return null;
-
-    }
-
 
     const playerId =
       data.id ||
@@ -1957,7 +1975,6 @@ export class Multiplayer {
 
             id:
               playerId
-
           }
         );
 
@@ -2031,7 +2048,7 @@ export class Multiplayer {
 
     for (
       const remote of
-        this.remotePlayers.values()
+      this.remotePlayers.values()
     ) {
 
       remote.destroy();
@@ -2045,7 +2062,7 @@ export class Multiplayer {
 
 
   /* =======================================================
-     DAMAGE
+     DAMAGE HANDLER
   ======================================================= */
 
   handleDamage(
@@ -2082,8 +2099,6 @@ export class Multiplayer {
     }
 
 
-    /* LOCAL PLAYER */
-
     if (
       targetId ===
       this.playerId
@@ -2107,8 +2122,6 @@ export class Multiplayer {
     }
 
 
-    /* REMOTE PLAYER */
-
     const remote =
       this.remotePlayers.get(
         targetId
@@ -2116,29 +2129,8 @@ export class Multiplayer {
 
 
     if (
-      !remote
+      remote
     ) {
-
-      return;
-
-    }
-
-
-    if (
-      message.health !==
-      undefined
-    ) {
-
-      remote.health =
-        Math.max(
-          0,
-          number(
-            message.health,
-            remote.health
-          )
-        );
-
-    } else {
 
       remote.health =
         Math.max(
@@ -2147,23 +2139,22 @@ export class Multiplayer {
             amount
         );
 
+
+      remote.alive =
+        remote.health > 0;
+
+
+      remote.setVisible(
+        remote.alive
+      );
+
     }
-
-
-    remote.alive =
-      remote.health >
-      0;
-
-
-    remote.setVisible(
-      remote.alive
-    );
 
   }
 
 
   /* =======================================================
-     RESPAWN
+     RESPAWN HANDLER
   ======================================================= */
 
   handleRespawn(
@@ -2172,8 +2163,7 @@ export class Multiplayer {
 
     const playerId =
       message.playerId ||
-      message.id ||
-      this.playerId;
+      message.id;
 
 
     const team =
@@ -2182,10 +2172,6 @@ export class Multiplayer {
         ? message.team
         : this.team;
 
-
-    /* =====================================================
-       LOCAL PLAYER
-    ===================================================== */
 
     if (
       playerId ===
@@ -2196,25 +2182,18 @@ export class Multiplayer {
         team;
 
 
-      /*
-       * VERY IMPORTANT:
-       *
-       * Ignore server coordinates here.
-       * Use a known-safe spawn from the
-       * original map.
-       */
-
       this.applyLocalSpawn();
+
+
+      this.sendPlayerUpdate(
+        true
+      );
 
 
       return;
 
     }
 
-
-    /* =====================================================
-       REMOTE PLAYER
-    ===================================================== */
 
     const remote =
       this.remotePlayers.get(
@@ -2243,59 +2222,51 @@ export class Multiplayer {
       true;
 
 
-    /*
-     * For remote players we can use
-     * server coordinates because they
-     * are not controlled by local collision.
-     */
+    const position =
+      message.position || {};
 
-    const hasServerPosition =
-      Number.isFinite(
-        Number(
-          message.x
-        )
-      ) &&
-      Number.isFinite(
-        Number(
-          message.y
-        )
-      ) &&
-      Number.isFinite(
-        Number(
-          message.z
-        )
-      );
+
+    const x =
+      message.x ??
+      position.x;
+
+
+    const y =
+      message.y ??
+      position.y;
+
+
+    const z =
+      message.z ??
+      position.z;
 
 
     if (
-      hasServerPosition
+      x !== undefined ||
+      y !== undefined ||
+      z !== undefined
     ) {
 
       remote.targetPosition.set(
 
         number(
-          message.x,
+          x,
           remote.targetPosition.x
         ),
 
         number(
-          message.y,
-          1.7
+          y,
+          remote.targetPosition.y
         ),
 
         number(
-          message.z,
+          z,
           remote.targetPosition.z
         )
 
       );
 
     }
-
-
-    remote.position.copy(
-      remote.targetPosition
-    );
 
 
     remote.setVisible(
@@ -2306,10 +2277,12 @@ export class Multiplayer {
 
 
   /* =======================================================
-     SAFE LOCAL SPAWN
+     LOCAL SPAWN
   ======================================================= */
 
-  applyLocalSpawn() {
+  applyLocalSpawn(
+    data = {}
+  ) {
 
     if (
       !this.player ||
@@ -2321,33 +2294,22 @@ export class Multiplayer {
     }
 
 
-    const spawns =
+    /*
+     * IMPORTANT:
+     * The old map is kept.
+     * We only use the old-map spawn points.
+     */
+
+    const points =
       this.team === "red"
         ? RED_SPAWNS
         : BLUE_SPAWNS;
 
 
-    if (
-      !spawns.length
-    ) {
-
-      return;
-
-    }
-
-
-    /*
-     * Rotate through spawn points.
-     */
-
-    const index =
-      this.spawnIndex %
-      spawns.length;
-
-
     const spawn =
-      spawns[
-        index
+      points[
+        this.spawnIndex %
+        points.length
       ];
 
 
@@ -2356,36 +2318,32 @@ export class Multiplayer {
         this.spawnIndex +
         1
       ) %
-      spawns.length;
+      points.length;
 
 
-    /*
-     * Set position directly.
-     */
-
-    this.player.position.set(
-
-      spawn.x,
-
-      spawn.y,
-
-      spawn.z
-
+    this.player.position.copy(
+      spawn
     );
 
-
-    /*
-     * Reset health.
-     */
 
     this.player.health =
       100;
 
 
-    /*
-     * Reset alive state if the
-     * Player class has it.
-     */
+    if (
+      this.player.velocity &&
+      typeof this.player.velocity.set ===
+        "function"
+    ) {
+
+      this.player.velocity.set(
+        0,
+        0,
+        0
+      );
+
+    }
+
 
     if (
       "alive" in
@@ -2398,107 +2356,9 @@ export class Multiplayer {
     }
 
 
-    /*
-     * IMPORTANT:
-     *
-     * Clear velocity so the player
-     * doesn't continue moving with
-     * the old dead-player velocity.
-     */
-
-    if (
-      this.player.velocity
-    ) {
-
-      if (
-        typeof this.player.velocity.set ===
-          "function"
-      ) {
-
-        this.player.velocity.set(
-          0,
-          0,
-          0
-        );
-
-      }
-
-    }
-
-
-    /*
-     * Some versions of Player use
-     * a separate moving property.
-     */
-
-    if (
-      "moving" in
-      this.player
-    ) {
-
-      this.player.moving =
-        false;
-
-    }
-
-
-    /*
-     * Clear jump state if available.
-     */
-
-    if (
-      this.player.input
-    ) {
-
-      if (
-        "jump" in
-        this.player.input
-      ) {
-
-        this.player.input.jump =
-          false;
-
-      }
-
-    }
-
-
-    /*
-     * Keep the camera/player rotation
-     * valid after respawn.
-     *
-     * We do NOT force the camera to
-     * a new direction because that can
-     * fight the mobile look controls.
-     */
-
-    if (
-      this.player.camera
-    ) {
-
-      if (
-        !Number.isFinite(
-          this.player.camera.rotation.y
-        )
-      ) {
-
-        this.player.camera.rotation.y =
-          this.team === "red"
-            ? Math.PI
-            : 0;
-
-      }
-
-    }
-
-
-    /*
-     * Update HUD.
-     */
-
     if (
       typeof this.player.updateHUD ===
-      "function"
+        "function"
     ) {
 
       this.player.updateHUD();
@@ -2514,13 +2374,12 @@ export class Multiplayer {
 
   getEnemyTargets() {
 
-    const result =
-      [];
+    const result = [];
 
 
     for (
       const remote of
-        this.remotePlayers.values()
+      this.remotePlayers.values()
     ) {
 
       if (
@@ -2565,13 +2424,12 @@ export class Multiplayer {
 
   getAllTargets() {
 
-    const result =
-      [];
+    const result = [];
 
 
     for (
       const remote of
-        this.remotePlayers.values()
+      this.remotePlayers.values()
     ) {
 
       if (
@@ -2617,6 +2475,7 @@ export class Multiplayer {
     const players = [
 
       {
+
         id:
           this.playerId,
 
@@ -2628,6 +2487,7 @@ export class Multiplayer {
 
         local:
           true
+
       }
 
     ];
@@ -2635,7 +2495,7 @@ export class Multiplayer {
 
     for (
       const remote of
-        this.remotePlayers.values()
+      this.remotePlayers.values()
     ) {
 
       players.push({
@@ -2663,68 +2523,44 @@ export class Multiplayer {
 
 
   /* =======================================================
-     ROOM UI
+     ROOM CHANGED
   ======================================================= */
 
   notifyRoomChanged() {
 
     if (
-      typeof this.onRoomChanged !==
+      typeof this.onRoomChanged ===
       "function"
     ) {
 
-      return;
+      this.onRoomChanged({
+
+        roomCode:
+          this.roomCode,
+
+        mode:
+          this.mode,
+
+        team:
+          this.team,
+
+        players:
+          this.getRoomPlayers()
+
+      });
 
     }
-
-
-    this.onRoomChanged({
-
-      roomCode:
-        this.roomCode,
-
-      mode:
-        this.mode,
-
-      team:
-        this.team,
-
-      players:
-        this.getRoomPlayers()
-
-    });
 
   }
 
 
   /* =======================================================
-     UPDATE
+     PLAYER UPDATE
   ======================================================= */
 
-  update(
-    delta
+  sendPlayerUpdate(
+    force = false
   ) {
-
-    /*
-     * Update remote players.
-     */
-
-    for (
-      const remote of
-        this.remotePlayers.values()
-    ) {
-
-      remote.update(
-        delta
-      );
-
-    }
-
-
-    /*
-     * Never interfere with local
-     * movement here.
-     */
 
     if (
       !this.online ||
@@ -2744,9 +2580,10 @@ export class Multiplayer {
 
 
     if (
+      !force &&
       now -
         this.lastNetworkSend <
-      this.networkInterval
+        this.networkInterval
     ) {
 
       return;
@@ -2761,6 +2598,55 @@ export class Multiplayer {
     const position =
       this.player.position;
 
+
+    const yaw =
+      this.player.yaw ??
+      (
+        this.player.camera
+          ? this.player.camera.rotation.y
+          : 0
+      );
+
+
+    const pitch =
+      this.player.pitch ??
+      (
+        this.player.camera
+          ? this.player.camera.rotation.x
+          : 0
+      );
+
+
+    const health =
+      number(
+        this.player.health,
+        100
+      );
+
+
+    const alive =
+      health > 0;
+
+
+    const moving =
+      Boolean(
+        this.player.velocity &&
+        this.player.velocity.lengthSq() >
+          0.01
+      );
+
+
+    /*
+     * IMPORTANT FIX:
+     *
+     * The server expects:
+     *
+     * position: { x, y, z }
+     * rotation: { x, y }
+     *
+     * We also send the old flat values for
+     * compatibility with older clients.
+     */
 
     this.send({
 
@@ -2779,36 +2665,80 @@ export class Multiplayer {
       team:
         this.team,
 
+
+      position: {
+
+        x:
+          Number(
+            position.x
+          ),
+
+        y:
+          Number(
+            position.y
+          ),
+
+        z:
+          Number(
+            position.z
+          )
+
+      },
+
+
+      rotation: {
+
+        x:
+          Number(
+            pitch
+          ),
+
+        y:
+          Number(
+            yaw
+          )
+
+      },
+
+
+      /*
+       * Compatibility fields
+       */
+
       x:
-        position.x,
+        Number(
+          position.x
+        ),
 
       y:
-        position.y,
+        Number(
+          position.y
+        ),
 
       z:
-        position.z,
+        Number(
+          position.z
+        ),
 
       yaw:
-        this.player.camera
-          ? this.player.camera.rotation.y
-          : 0,
+        Number(
+          yaw
+        ),
 
       pitch:
-        0,
+        Number(
+          pitch
+        ),
+
 
       health:
-        this.player.health,
+        health,
 
       alive:
-        this.player.health >
-        0,
+        alive,
 
       moving:
-        Boolean(
-          this.player.velocity &&
-          this.player.velocity.lengthSq() >
-            0.01
-        )
+        moving
 
     });
 
@@ -2930,6 +2860,33 @@ export class Multiplayer {
 
 
   /* =======================================================
+     UPDATE
+  ======================================================= */
+
+  update(
+    delta
+  ) {
+
+    for (
+      const remote of
+      this.remotePlayers.values()
+    ) {
+
+      remote.update(
+        delta
+      );
+
+    }
+
+
+    this.sendPlayerUpdate(
+      false
+    );
+
+  }
+
+
+  /* =======================================================
      LEAVE
   ======================================================= */
 
@@ -2984,7 +2941,9 @@ export class Multiplayer {
 
         this.socket.close();
 
-      } catch (_) {}
+      } catch (
+        _
+      ) {}
 
     }
 
@@ -2992,14 +2951,11 @@ export class Multiplayer {
     this.socket =
       null;
 
-
     this.connected =
       false;
 
-
     this.connecting =
       false;
-
 
     this.connectPromise =
       null;
